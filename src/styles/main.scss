@@ -1,0 +1,70 @@
+$lighblue: #A8DADC;
+$honeydew: #F1FAEE;
+$desire: #E63946;
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap&subset=cyrillic');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    background-color: $honeydew;
+    cursor: default;
+}
+
+.header {
+    display: block;
+    margin-top: 32px;
+    h1 {
+        margin: 0;
+        text-align: center
+    }
+}
+
+.content {
+    padding: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+#map {
+    margin-right: 20px;
+    width: 100%;
+    //min-width: 400px;
+    height: 400px;
+    border: 1px solid $lighblue;
+}
+.route_editor_wrapper {
+    width: 400px;
+    //min-width: 200px;
+}
+
+#new_point_input {
+    width: 100%;
+    border: 1px solid $lighblue;
+}
+
+ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+li {
+    padding: 10px 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid $lighblue;
+}
+
+button {
+    padding: 0;
+    border: none;
+    outline: none;
+    background-color: $honeydew;
+    cursor: pointer;
+    &:hover {
+        color: $desire;
+    }
+}

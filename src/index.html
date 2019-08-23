@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Редактор маршрутов</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=1921f524-af5f-4b13-8ac4-ca1ccf4d38a4&lang=ru_RU" type="text/javascript">
+    </script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+</head>
+<body>
+    <header class="header"><h1>Редактор маршрутов</h1></header>
+    <div class="content">
+        <div id="map"></div>
+        <div class="route_editor_wrapper">
+            <div class="new_point">
+                <input type="text" placeholder="Введите новую точку маршрута" id="new_point_input">
+            </div>
+            <ul id="points">
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
