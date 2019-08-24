@@ -91,6 +91,7 @@ ymaps.ready(init);
         currentPoints.splice(index, 1);
         geoObjects.splice(index,1);
         polyineCoordinates.splice(index,1);
+
     }
 
     const refresh = () => {
@@ -104,18 +105,19 @@ ymaps.ready(init);
 
 
     // Get coordinates by adress
-    const geocodePoint = (point, index) => {
-        let myGeocoder = ymaps.geocode(point);
+    const geocodePoint = (pointName, index) => {
+        let myGeocoder = ymaps.geocode(pointName);
         myGeocoder.then(function(res) {
             if (res.geoObjects.get(0))
             {
                 // Enable drag and drop
-                res.geoObjects.get(0).options.set("draggable", true); 
+                res.geoObjects.get(0).options.set("draggable", true);
+                res.geoObjects.get(0).events.group().removeAll();
                 res.geoObjects.get(0).events.add("dragend", (event) => {
-                    dragEnd(event, index);
+                    dragEnd(event, pointName);
                 })
                 // Place adress inside baloon
-                res.geoObjects.get(0).properties.set('balloonContentBody', point);
+                res.geoObjects.get(0).properties.set('balloonContentBody', pointName);
                 // Save Placemark
                 geoObjects.push(res.geoObjects.get(0));
                 polyineCoordinates.push(res.geoObjects.get(0).geometry._coordinates)
@@ -129,7 +131,7 @@ ymaps.ready(init);
             }
         });
     }
-
+    
     const fillMap = () => {
         geoObjects.forEach( (element, index) => {
             // Set index to Placemark before adding it
@@ -150,8 +152,6 @@ ymaps.ready(init);
         });
 
         myMap.geoObjects.add(myPolyline);
-
-        if (coordinates.length > 1) {}
         //Line below enables to scale map so polyline can fit into it. 
         //But it prevents from centering map on Placemark upon it creation.
         //myMap.setBounds(myPolyline.geometry.getBounds());
@@ -171,16 +171,30 @@ ymaps.ready(init);
         },
     });
 
-    const dragEnd = (event, index) => {
+    const dragEnd = (event, pointName) => {
+        let index = currentPoints.indexOf(pointName);
         //Get new coordinates after dragging Placemark
         let draggedPlacemark = event.get('target');
         let newCoordinates = draggedPlacemark.geometry._coordinates;
+
         //Apply reverse geocoding to this coordinates
         let myGeocoder = ymaps.geocode(newCoordinates);
         myGeocoder.then(function(res) {
+            
+            res.geoObjects.get(0).options.set("draggable", true);
             //Get new adress and set it inside baloon
+            draggedPlacemark = res.geoObjects.get(0);
             let newName = res.geoObjects.get(0)? res.geoObjects.get(0).properties.get('name') : "Не удалось определить адресс";
             draggedPlacemark.properties.set('balloonContentBody', newName);
+            
+            
+            //Renew events with the new adress
+            draggedPlacemark.events.group().removeAll();
+            draggedPlacemark.events.group().add("dragend", (event) => {
+                dragEnd(event, newName);
+            })
+            // Prevent placemark to jump to the center of the geocoded object
+            draggedPlacemark.geometry._coordinates = newCoordinates;
             //Save new Placemark
             currentPoints[index] = newName;
             polyineCoordinates[index] = newCoordinates;
@@ -188,7 +202,7 @@ ymaps.ready(init);
             refresh();
         })
     }
-
+    
     //Start
     refresh();
 }
